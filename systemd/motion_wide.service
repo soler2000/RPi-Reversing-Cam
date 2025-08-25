@@ -1,0 +1,18 @@
+[Unit]
+Description=RPi Reversing Cam Web Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/RPi-Reversing-Cam
+# Run as root to drive NeoPixels on PWM/DMA reliably
+User=root
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/pi/RPi-Reversing-Cam/.venv/bin/python -m app.webapp
+Restart=on-failure
+# Wi‑Fi fallback before we start serving
+ExecStartPre=/usr/local/bin/rpi_wifi_fallback.sh
+
+[Install]
+WantedBy=multi-user.target
