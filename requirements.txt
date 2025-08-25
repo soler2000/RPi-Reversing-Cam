@@ -1,10 +1,9 @@
 flask==3.0.3
 jinja2==3.1.4
 werkzeug==3.0.3
-picamera2==0.3.19
-opencv-python==4.10.0.84
 numpy==2.0.1
-pi-ina219==1.4.1
-adafruit-circuitpython-neopixel==6.3.12
-adafruit-circuitpython-vl53l1x==1.1.19
 psutil==6.0.0
+pi-ina219==1.4.1
+adafruit-blinka>=8.30.0
+adafruit-circuitpython-neopixel==6.3.12
+adafruit-circuitpython-vl53l1x>=1.2.0
