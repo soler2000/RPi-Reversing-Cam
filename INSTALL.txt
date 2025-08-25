@@ -1,0 +1,40 @@
+1) Flash Raspberry Pi OS Bookworm (32-bit) and boot the Pi Zero 2 W.
+
+2) Enable camera + I2C:
+   sudo raspi-config   -> Interface Options -> I2C = enable, Camera = enable
+   (or let the install script do it non-interactively)
+
+3) Clone the repo and run the installer:
+   sudo apt-get update && sudo apt-get install -y git
+   cd /home/pi
+   git clone https://github.com/solder2000/RPi-Reversing-Cam.git
+   cd RPi-Reversing-Cam
+   bash scripts/install.sh
+
+4) Reboot once (optional, good idea):
+   sudo reboot
+
+5) Start the service:
+   sudo systemctl start motion_wide.service
+   sudo systemctl status motion_wide.service
+
+6) Browse from iPhone/iPad to:
+   http://<pi-ip>:8000/
+
+7) Auto AP fallback:
+   - If no known Wi‑Fi within 30s, the Pi brings up an Access Point using NM's 'shared' mode.
+   - Default SSID/PW: RPiCam / raspberry (change in Settings).
+   - Connect to the AP and browse to http://192.168.0.1:8000/ (typical NM shared subnet).
+
+8) Wiring quick refs:
+   - VL53L1X: I2C (0x29) -> SDA/SCL pins.
+   - INA219: I2C at 0x43 (config your board accordingly).
+   - NeoPixel ring: DIN -> GPIO18 (pin 12), 5V->5V, GND->GND. Run service as root for PWM/DMA.
+
+Notes:
+- MJPEG is used for low-latency, iOS-friendly streaming; overlays rendered server-side via OpenCV.
+- Battery % is linear from v_min to v_max (set in Settings) — tune for your UPS chemistry.
+
+Uninstall:
+  sudo systemctl disable --now motion_wide.service
+  sudo rm -f /etc/systemd/system/motion_wide.service
