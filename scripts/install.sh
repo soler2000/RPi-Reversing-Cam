@@ -23,7 +23,9 @@ echo "[+] Set permissions (NeoPixel requires root via PWM/DMA)"
 sudo usermod -aG video,i2c,gpio pi || true
 
 echo "[+] Initialize DB..."
-python3 db/migrations.py
+. .venv/bin/activate
+python -m db.migrations
+deactivate
 
 echo "[+] Install systemd service..."
 sudo install -m 0644 -o root -g root systemd/motion_wide.service /etc/systemd/system/motion_wide.service
