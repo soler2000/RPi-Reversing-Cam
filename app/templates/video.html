@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block body %}
+<h2>Live Video</h2>
+<div class="video-wrap">
+  <img id="stream" src="{{ url_for('stream') }}" alt="Live stream" />
+</div>
+<p class="note">Overlays (distance, battery, guide lines) are rendered on-server for low latency.</p>
+{% endblock %}
