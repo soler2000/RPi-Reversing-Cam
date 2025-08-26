@@ -3,17 +3,14 @@ Description=RPi Reversing Cam Web App (motion_wide)
 After=network-online.target
 Wants=network-online.target
 
-
 [Service]
 Type=simple
 User=root
 Group=video
 Environment=PYTHONUNBUFFERED=1
-Environment=APP_DIR=/opt/rpi-reversing-cam
 WorkingDirectory=/opt/rpi-reversing-cam
-ExecStart=/opt/rpi-reversing-cam/venv/bin/waitress-serve --host=0.0.0.0 --port=8000 rpi_reversing_cam.app:create_app
+ExecStart=/opt/rpi-reversing-cam/venv/bin/waitress-serve --host=0.0.0.0 --port=8000 --call rpi_reversing_cam.app:create_app
 Restart=on-failure
-
 
 [Install]
 WantedBy=multi-user.target
