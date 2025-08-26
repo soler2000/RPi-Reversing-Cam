@@ -1,5 +1,135 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Settings</h2>
-<pre style="white-space:pre-wrap; word-break:break-word;">{{ cfg | tojson(indent=2) }}</pre>
+<h2 style="margin-bottom:.5rem;">Settings</h2>
+{% if saved %}
+<div style="background:#163d2b;border:1px solid #1e6d4d;color:#b9f6d1;padding:.6rem .8rem;border-radius:.5rem;margin-bottom:1rem;">
+  ✅ Saved & applied. Stream restarted.
+</div>
+{% endif %}
+
+<form method="post" style="display:grid; gap:1rem;">
+  <!-- CAMERA -->
+  <section class="card">
+    <h3>Camera</h3>
+    <div class="grid two">
+      <label>Width
+        <input type="number" name="camera_width" min="160" max="1920" step="2" value="{{ cfg.camera.width }}">
+      </label>
+      <label>Height
+        <input type="number" name="camera_height" min="120" max="1080" step="2" value="{{ cfg.camera.height }}">
+      </label>
+      <label>FPS
+        <input type="number" name="camera_fps" min="1" max="60" value="{{ cfg.camera.fps }}">
+      </label>
+      <label>Rotation
+        <select name="camera_rotation">
+          <option value="0"  {% if cfg.camera.rotation_deg == 0 %}selected{% endif %}>0°</option>
+          <option value="180"{% if cfg.camera.rotation_deg == 180 %}selected{% endif %}>180°</option>
+        </select>
+      </label>
+      <label>JPEG Quality
+        <input type="range" name="camera_jpeg_q" min="60" max="95" value="{{ cfg.camera.jpeg_quality }}" oninput="this.nextElementSibling.value=this.value">
+        <output>{{ cfg.camera.jpeg_quality }}</output>
+      </label>
+    </div>
+  </section>
+
+  <!-- OVERLAY -->
+  <section class="card">
+    <h3>Overlay</h3>
+    <div class="grid two">
+      <label class="chk"><input type="checkbox" name="ov_enabled" {% if cfg.overlay.enabled %}checked{% endif %}> Enabled</label>
+      <label class="chk"><input type="checkbox" name="ov_stats" {% if cfg.overlay.show_stats %}checked{% endif %}> Show stats</label>
+    </div>
+
+    <details open>
+      <summary>Text</summary>
+      <div class="grid two">
+        <label class="chk"><input type="checkbox" name="ov_text_enabled" {% if cfg.overlay.text.enabled %}checked{% endif %}> Enabled</label>
+        <label>Content
+          <input type="text" name="ov_text_content" maxlength="120" value="{{ cfg.overlay.text.content }}">
+        </label>
+        <label>Position
+          <select name="ov_text_position">
+            {% for pos in ["top-left","top-right","bottom-left","bottom-right"] %}
+            <option value="{{pos}}" {% if cfg.overlay.text.position==pos %}selected{% endif %}>{{pos}}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>Font size
+          <input type="number" name="ov_text_font" min="8" max="64" value="{{ cfg.overlay.text.font_size }}">
+        </label>
+        <label>Margin
+          <input type="number" name="ov_text_margin" min="0" max="100" value="{{ cfg.overlay.text.margin }}">
+        </label>
+      </div>
+    </details>
+
+    {% set l1 = cfg.overlay.lines.line1 %}
+    {% set l2 = cfg.overlay.lines.line2 %}
+
+    <details open>
+      <summary>Guide line 1</summary>
+      <div class="grid two">
+        <label class="chk"><input type="checkbox" name="l1_enabled" {% if l1.enabled %}checked{% endif %}> Enabled</label>
+        <label>Start X (0..1)
+          <input type="number" name="l1_sx" min="0" max="1" step="0.01" value="{{ l1.start[0] }}">
+        </label>
+        <label>Start Y (0..1)
+          <input type="number" name="l1_sy" min="0" max="1" step="0.01" value="{{ l1.start[1] }}">
+        </label>
+        <label>End X (0..1)
+          <input type="number" name="l1_ex" min="0" max="1" step="0.01" value="{{ l1.end[0] }}">
+        </label>
+        <label>End Y (0..1)
+          <input type="number" name="l1_ey" min="0" max="1" step="0.01" value="{{ l1.end[1] }}">
+        </label>
+        <label>Width (px)
+          <input type="number" name="l1_w" min="1" max="20" value="{{ l1.width_px }}">
+        </label>
+        <label>Color
+          <input type="color" name="l1_color" value="{{ l1.color }}">
+        </label>
+        <label>Alpha (0..1)
+          <input type="range" name="l1_alpha" min="0" max="1" step="0.05" value="{{ l1.alpha }}" oninput="this.nextElementSibling.value=this.value">
+          <output>{{ l1.alpha }}</output>
+        </label>
+      </div>
+    </details>
+
+    <details open>
+      <summary>Guide line 2</summary>
+      <div class="grid two">
+        <label class="chk"><input type="checkbox" name="l2_enabled" {% if l2.enabled %}checked{% endif %}> Enabled</label>
+        <label>Start X (0..1)
+          <input type="number" name="l2_sx" min="0" max="1" step="0.01" value="{{ l2.start[0] }}">
+        </label>
+        <label>Start Y (0..1)
+          <input type="number" name="l2_sy" min="0" max="1" step="0.01" value="{{ l2.start[1] }}">
+        </label>
+        <label>End X (0..1)
+          <input type="number" name="l2_ex" min="0" max="1" step="0.01" value="{{ l2.end[0] }}">
+        </label>
+        <label>End Y (0..1)
+          <input type="number" name="l2_ey" min="0" max="1" step="0.01" value="{{ l2.end[1] }}">
+        </label>
+        <label>Width (px)
+          <input type="number" name="l2_w" min="1" max="20" value="{{ l2.width_px }}">
+        </label>
+        <label>Color
+          <input type="color" name="l2_color" value="{{ l2.color }}">
+        </label>
+        <label>Alpha (0..1)
+          <input type="range" name="l2_alpha" min="0" max="1" step="0.05" value="{{ l2.alpha }}" oninput="this.nextElementSibling.value=this.value">
+          <output>{{ l2.alpha }}</output>
+        </label>
+      </div>
+    </details>
+  </section>
+
+  <div style="display:flex; gap:.6rem; flex-wrap:wrap;">
+    <button class="btn" type="submit">Save & Apply</button>
+    <a class="btn secondary" href="/live">View Live</a>
+  </div>
+</form>
 {% endblock %}
