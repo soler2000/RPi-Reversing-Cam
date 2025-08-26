@@ -36,7 +36,7 @@ cd RPi-Reversing-Cam
 
 #Make it executable and install
 chmod +x install.sh
-#sudo ./install.sh
+sudo ./install.sh
 
 
 After install:
