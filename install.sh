@@ -21,8 +21,9 @@ install_apt_deps() {
   say "Installing APT dependencies..."
   apt-get update
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    python3-picamera2 libcamera-tools python3-pil python3-numpy \
-    network-manager fonts-dejavu python3-venv rsync
+    python3-picamera2 libcamera-apps libcamera-tools \
+    python3-numpy python3-pil python3-venv \
+    network-manager fonts-dejavu rsync
 }
 
 sync_project() {
@@ -68,7 +69,7 @@ UNIT
 }
 
 setup_venv() {
-  say "Setting up venv at ${VENV_DIR} (with system site-packages for picamera2)..."
+  say "Setting up venv at ${VENV_DIR} (system site-packages for numpy/picamera2)..."
   python3 -m venv --system-site-packages "${VENV_DIR}" || true
   "${VENV_DIR}/bin/pip" install --upgrade pip
   "${VENV_DIR}/bin/pip" install -r "${APP_DIR}/requirements.txt"
@@ -99,4 +100,4 @@ main() {
   restart_service
   say "Done. Open http://<pi-ip>:8000/"
 }
-main "$@"
+main "$@"=
