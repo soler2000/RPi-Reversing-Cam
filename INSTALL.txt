@@ -22,9 +22,21 @@ What install.sh does:
 
 Run:
 ----
+#Prep the system
+sudo apt update && sudo apt full-upgrade -y
+sudo apt install -y git
 
 
-sudo ./install.sh
+#Get the GIT
+git clone --branch dev1 --single-branch --depth 1 \
+  https://github.com/soler2000/RPi-Reversing-Cam.git
+cd RPi-Reversing-Cam
+
+
+
+#Make it executable and install
+chmod +x install.sh
+#sudo ./install.sh
 
 
 After install:
