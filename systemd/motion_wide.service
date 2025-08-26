@@ -1,18 +1,19 @@
 [Unit]
-Description=RPi Reversing Cam Web Service
+Description=RPi Reversing Cam Web App (motion_wide)
 After=network-online.target
 Wants=network-online.target
 
+
 [Service]
 Type=simple
-WorkingDirectory=/home/pi/RPi-Reversing-Cam
-# Run as root to drive NeoPixels on PWM/DMA reliably
 User=root
+Group=video
 Environment=PYTHONUNBUFFERED=1
-ExecStart=/home/pi/RPi-Reversing-Cam/.venv/bin/python -m app.webapp
+Environment=APP_DIR=/opt/rpi-reversing-cam
+WorkingDirectory=/opt/rpi-reversing-cam
+ExecStart=/opt/rpi-reversing-cam/venv/bin/waitress-serve --host=0.0.0.0 --port=8000 rpi_reversing_cam.app:create_app
 Restart=on-failure
-# Wi‑Fi fallback before we start serving
-ExecStartPre=/usr/local/bin/rpi_wifi_fallback.sh
+
 
 [Install]
 WantedBy=multi-user.target

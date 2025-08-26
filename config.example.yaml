@@ -1,0 +1,48 @@
+app:
+host: 0.0.0.0
+port: 8000
+dark_mode: true
+
+
+camera:
+width: 640
+height: 480
+fps: 20
+rotation_deg: 0 # 0 or 180
+jpeg_quality: 85
+
+
+overlay:
+enabled: true
+show_stats: true # CPU temp/load + lux overlay
+text:
+enabled: true
+content: "RPi Reversing Cam"
+position: "top-left" # top-left|top-right|bottom-left|bottom-right
+font_size: 20
+margin: 10
+lines:
+line1:
+enabled: true
+start: [0.15, 0.75] # normalized (x,y)
+end: [0.85, 0.75]
+width_px: 4
+color: "#00FF00"
+alpha: 0.7
+line2:
+enabled: true
+start: [0.25, 0.9]
+end: [0.75, 0.9]
+width_px: 4
+color: "#00FF00"
+alpha: 0.5
+
+
+system:
+shutdown_on_voltage:
+enabled: false
+threshold_v: 3.3 # placeholder; requires sensor integration
+
+
+wifi:
+ap_fallback_seconds: 30 # used by stub script; future UI integration

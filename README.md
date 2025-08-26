@@ -1,17 +1,34 @@
-# RPi-Reversing-Cam
+# RPi-Reversing-Cam (MVP) — dev1
 
-Low-latency reversing camera for **Raspberry Pi Zero 2 W (Bookworm)** with:
-- Live MJPEG video with **server-side overlays** (distance, battery, CPU, 2 adjustable guide lines)
-- **VL53L1X** TOF (0x29) distance displayed (m, 1 decimal) on video and dashboard
-- **INA219** (0x43) voltage/current/power + % estimate
-- 16x **NeoPixel ring** on GPIO18 (pin 12): white illumination and distance-warning alternating **white ↔ red** with frequency mapping **0.1–20 Hz** (configurable)
-- Flask web UI (dark, mobile-first), dashboard updates every 2s
-- **Wi‑Fi fallback** AP if not connected within 30s
-- Auto-start via systemd (`motion_wide.service`)
+
+Low-latency reversing camera web app for Raspberry Pi Zero 2 W on Raspberry Pi OS **Bookworm**.
+
+
+**MVP focus:**
+- Live MJPEG stream with **server-side overlays** (text + configurable reversing guide lines)
+- Configurable: resolution, FPS, 180° rotation, overlay text size/position, 2 lines (start/end, width, color, alpha)
+- Mobile-first Flask UI (dark mode) for iPhone/iPad
+- Dashboard: CPU temp & load, Wi‑Fi SSID/signal, **approx. lux** from camera
+- Settings saved in **YAML** (no sqlite)
+- Python venv, `systemd` service, idempotent `install.sh`
+
+
+> Later milestones (scaffolded): Wi‑Fi AP fallback if no network in 30s, Wi‑Fi manager UI, battery-voltage shutdown.
+
 
 ## Quick start
+
+
 ```bash
-git clone https://github.com/solder2000/RPi-Reversing-Cam.git
+# On the Pi (Bookworm). Clone this repo then run installer:
+sudo apt update
+sudo apt install -y git
+
+
+git clone https://github.com/soler2000/RPi-Reversing-Cam.git
 cd RPi-Reversing-Cam
-bash scripts/install.sh
-sudo systemctl start motion_wide.service
+# (Optionally checkout dev branch)
+# git checkout dev1
+
+
+sudo ./install.sh

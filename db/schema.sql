@@ -1,3 +1,0 @@
-CREATE TABLE IF NOT EXISTS settings (k TEXT PRIMARY KEY, v TEXT);
-CREATE TABLE IF NOT EXISTS sensor_log (ts INTEGER PRIMARY KEY, batt_pct REAL, voltage REAL, current REAL, power REAL);
-CREATE TABLE IF NOT EXISTS motion_events (ts INTEGER PRIMARY KEY, magnitude REAL);
