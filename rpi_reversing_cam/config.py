@@ -20,20 +20,12 @@ _DEFAULTS: Dict[str, Any] = {
         },
         "lines": {
             "line1": {
-                "enabled": True,
-                "start": [0.15, 0.75],  # normalized (x,y)
-                "end":   [0.85, 0.75],
-                "width_px": 4,
-                "color": "#00FF00",
-                "alpha": 0.7,
+                "enabled": True, "start": [0.15, 0.75], "end": [0.85, 0.75],
+                "width_px": 4, "color": "#00FF00", "alpha": 0.7,
             },
             "line2": {
-                "enabled": True,
-                "start": [0.25, 0.9],
-                "end":   [0.75, 0.9],
-                "width_px": 4,
-                "color": "#00FF00",
-                "alpha": 0.5,
+                "enabled": True, "start": [0.25, 0.9], "end": [0.75, 0.9],
+                "width_px": 4, "color": "#00FF00", "alpha": 0.5,
             },
         },
     },
