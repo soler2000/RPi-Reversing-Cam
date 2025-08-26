@@ -1,4 +1,9 @@
-Flask>=3.0,<4
-waitress>=3.0
-Pillow>=9.0
-PyYAML>=6.0
+Flask==3.1.2
+numpy==1.24.2
+picamera2==0.3.30
+pillow==11.3.0
+types-Flask-Cors==3.0
+types-Flask-SQLAlchemy==2.5
+types-Pillow==9.3
+types-waitress==2.1
+waitress==3.0.2
