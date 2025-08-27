@@ -7,15 +7,15 @@
 </div>
 {% endif %}
 
-{% set cam = (cfg.get('camera') or {}) %}
-{% set ov  = (cfg.get('overlay') or {}) %}
+{% set cfgd = cfg or {} %}
+{% set cam = (cfgd.get('camera') or {}) %}
+{% set ov  = (cfgd.get('overlay') or {}) %}
 {% set text = (ov.get('text') or {}) %}
 {% set lines = (ov.get('lines') or {}) %}
 {% set l1 = (lines.get('line1') or {'enabled': True, 'start':[0.15,0.75], 'end':[0.85,0.75], 'width_px':4, 'color':'#00FF00', 'alpha':0.7}) %}
 {% set l2 = (lines.get('line2') or {'enabled': True, 'start':[0.25,0.90], 'end':[0.75,0.90], 'width_px':4, 'color':'#00FF00', 'alpha':0.5}) %}
 
 <form method="post" style="display:grid; gap:1rem;">
-  <!-- CAMERA -->
   <section class="card">
     <h3>Camera</h3>
     <div class="grid two">
@@ -42,7 +42,6 @@
     </div>
   </section>
 
-  <!-- OVERLAY -->
   <section class="card">
     <h3>Overlay</h3>
     <div class="grid two">
