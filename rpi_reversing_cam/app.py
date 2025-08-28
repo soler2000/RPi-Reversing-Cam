@@ -1,4 +1,3 @@
-cat > ~/RPi-Reversing-Cam/rpi_reversing_cam/app.py <<'PY'
 from __future__ import annotations
 from flask import Flask, Response, render_template, request, redirect, url_for, jsonify
 from . import config as cfgmod
@@ -70,4 +69,3 @@ def create_app():
         return redirect(url_for("settings_get"))
 
     return app
-PY
