@@ -1,17 +1,24 @@
+cat > ~/RPi-Reversing-Cam/rpi_reversing_cam/templates/base.html <<'HTML'
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>RPi Reversing Cam</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<meta charset="utf-8">
+<title>RPi Reversing Cam</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <nav style="padding:8px;">
-    <a href="/">Dashboard</a> · <a href="/live">Live</a> · <a href="/settings">Settings</a>
+<header>
+  <h1>RPi Reversing Cam</h1>
+  <nav>
+    <a href="{{ url_for('index') }}">Live</a>
+    <a href="{{ url_for('settings_get') }}">Settings</a>
   </nav>
-  <main style="padding:12px;">
-    {% block content %}{% endblock %}
-  </main>
+</header>
+<main>
+  {% block content %}{% endblock %}
+</main>
+<footer><small>dev2 minimal</small></footer>
 </body>
 </html>
+HTML
