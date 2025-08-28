@@ -28,7 +28,7 @@ sudo apt install -y git
 git clone https://github.com/soler2000/RPi-Reversing-Cam.git
 cd RPi-Reversing-Cam
 # (Optionally checkout dev branch)
-# git checkout dev1
+# git checkout dev2
 
 
 sudo ./install.sh
