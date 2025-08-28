@@ -1,4 +1,3 @@
-cat > ~/RPi-Reversing-Cam/rpi_reversing_cam/config.py <<'PY'
 from __future__ import annotations
 import json, os, tempfile, shutil
 from typing import Any, Dict
@@ -76,4 +75,3 @@ def _merge(base: Dict[str, Any], patch: Dict[str, Any]) -> Dict[str, Any]:
         else:
             out[k] = v
     return out
-PY
