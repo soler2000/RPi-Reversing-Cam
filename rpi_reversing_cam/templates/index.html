@@ -1,8 +1,7 @@
-cat > ~/RPi-Reversing-Cam/rpi_reversing_cam/templates/index.html <<'HTML'
 {% extends "base.html" %}
 {% block content %}
 <div class="card">
   <img id="mjpg" src="{{ url_for('stream') }}" alt="stream" />
 </div>
 {% endblock %}
-HTML
+
