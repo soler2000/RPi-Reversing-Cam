@@ -1,34 +1,8 @@
-{% extends 'base.html' %}
+cat > ~/RPi-Reversing-Cam/rpi_reversing_cam/templates/index.html <<'HTML'
+{% extends "base.html" %}
 {% block content %}
-<section class="cards">
 <div class="card">
-<h3>Wi‑Fi</h3>
-<div>SSID: <b>{{ wifi_ssid or '—' }}</b></div>
-<div>Signal: <b>{{ wifi_signal or '—' }}%</b></div>
+  <img id="mjpg" src="{{ url_for('stream') }}" alt="stream" />
 </div>
-<div class="card">
-<h3>CPU</h3>
-<div>Temp: <b><span id="cpu_temp">{{ cpu_temp }}</span> °C</b></div>
-<div>Load: <b><span id="load_avg">{{ load_avg }}</span></b></div>
-</div>
-<div class="card">
-<h3>Live View</h3>
-<a class="btn" href="/live">Open</a>
-</div>
-<div class="card">
-<h3>Settings</h3>
-<a class="btn" href="/settings">Open</a>
-</div>
-</section>
-<script>
-async function refresh() {
-try {
-const r = await fetch('/api/status');
-const j = await r.json();
-document.getElementById('cpu_temp').textContent = j.cpu_temp_c.toFixed(1);
-document.getElementById('load_avg').textContent = j.load_avg.toFixed(2);
-} catch(e) {}
-}
-setInterval(refresh, 2000);
-</script>
 {% endblock %}
+HTML
