@@ -1,17 +1,17 @@
-body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#111; color:#eee; }
-a { color:#9cf; } nav a { margin-right:.6rem; }
-pre { background:#222; padding:.8rem; border-radius:.6rem; }
-/* --- Settings page layout additions --- */
-.card { background:#1a1a1a; border:1px solid #2a2a2a; border-radius:12px; padding:12px 14px; }
-.card h3 { margin:0 0 .6rem 0; font-size:1.05rem; }
-.grid { display:grid; gap:.6rem; }
-.grid.two { grid-template-columns: repeat(2, minmax(0,1fr)); }
-@media (max-width: 720px) { .grid.two { grid-template-columns: 1fr; } }
-label { display:flex; flex-direction:column; gap:.3rem; font-size:.95rem; }
-input, select { background:#0f0f0f; color:#eee; border:1px solid #333; border-radius:8px; padding:.45rem .55rem; }
-input[type="range"] { padding:0; }
-label.chk { flex-direction:row; align-items:center; gap:.5rem; }
-details { background:#121212; border:1px solid #242424; border-radius:10px; padding:.5rem .7rem; margin:.5rem 0; }
-summary { cursor:pointer; color:#c8e2ff; margin:.2rem 0 .4rem; }
-.btn { display:inline-block; background:#2a6df1; color:#fff; text-decoration:none; padding:.55rem .9rem; border-radius:10px; border:0; }
-.btn.secondary { background:#303540; }
+cat > ~/RPi-Reversing-Cam/rpi_reversing_cam/static/style.css <<'CSS'
+body{font-family:system-ui,Segoe UI,Arial,sans-serif;margin:0;padding:0;background:#0b0f14;color:#e7eef7}
+header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#111826;border-bottom:1px solid #223}
+header h1{font-size:18px;margin:0}
+nav a{color:#9cc; margin-left:12px; text-decoration:none}
+main{padding:16px}
+.card{background:#0f1622;border:1px solid #223;border-radius:10px;padding:12px;max-width:960px}
+img#mjpg{width:100%;height:auto;display:block;border-radius:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
+.row{display:flex;gap:8px;align-items:center}
+fieldset{border:1px solid #243140;border-radius:10px;margin:10px 0;padding:10px}
+legend{color:#9cc}
+label{display:flex;flex-direction:column;font-size:14px;gap:4px}
+input,select,button{background:#101826;color:#e7eef7;border:1px solid #2a3b4d;border-radius:8px;padding:8px}
+button{cursor:pointer}
+.actions{margin-top:12px}
+CSS
