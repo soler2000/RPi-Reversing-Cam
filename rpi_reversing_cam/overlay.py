@@ -1,95 +1,66 @@
+cat > ~/RPi-Reversing-Cam/rpi_reversing_cam/overlay.py <<'PY'
 from __future__ import annotations
-from typing import Dict, Optional, Tuple
+from typing import Dict, Any, Tuple
+import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-def _parse_color(c: str) -> Tuple[int, int, int]:
-    c = (c or "#00FF00").strip()
-    if c.startswith("#"):
-        c = c[1:]
-    if len(c) == 6:
-        r = int(c[0:2], 16)
-        g = int(c[2:4], 16)
-        b = int(c[4:6], 16)
-        return (r, g, b)
-    return (0, 255, 0)
+def _hex_to_rgb(s: str) -> Tuple[int,int,int]:
+    s = s.strip()
+    if s.startswith("#"): s = s[1:]
+    if len(s) == 3:
+        s = "".join(ch*2 for ch in s)
+    r = int(s[0:2], 16); g = int(s[2:4], 16); b = int(s[4:6], 16)
+    return (r,g,b)
 
-def _draw_text(overlay: Image.Image, text: str, pos: str, font_size: int, margin: int) -> None:
-    if not text:
-        return
-    draw = ImageDraw.Draw(overlay)
-    try:
-        font = ImageFont.truetype("DejaVuSans.ttf", size=font_size)
-    except Exception:
-        font = ImageFont.load_default()
-    w, h = overlay.size
-    bbox = draw.textbbox((0, 0), text, font=font)
-    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
-    x, y = margin, margin
-    if pos == "top-right":
-        x = w - tw - margin
-    elif pos == "bottom-left":
-        y = h - th - margin
-    elif pos == "bottom-right":
-        x = w - tw - margin
-        y = h - th - margin
-    # shadow
-    for dx, dy in ((1, 1), (1, 0), (0, 1), (-1, -1)):
-        draw.text((x + dx, y + dy), text, font=font, fill=(0, 0, 0, 160))
-    draw.text((x, y), text, font=font, fill=(255, 255, 255, 220))
+def _pos(img_w: int, img_h: int, where: str, margin: int) -> Tuple[int,int]:
+    where = (where or "top-left").lower()
+    x = margin if "left" in where else (img_w - margin) if "right" in where else img_w//2
+    y = margin if "top" in where else (img_h - margin) if "bottom" in where else img_h//2
+    return x, y
 
-def _draw_line(overlay: Image.Image, start_xy: Tuple[int, int], end_xy: Tuple[int, int], width: int, color: str, alpha: float) -> None:
-    draw = ImageDraw.Draw(overlay)
-    r, g, b = _parse_color(color)
-    a = max(0, min(255, int(alpha * 255)))
-    draw.line([start_xy, end_xy], fill=(r, g, b, a), width=max(1, int(width)))
+def apply_overlay(frame_rgb: np.ndarray, cfg: Dict[str, Any]) -> np.ndarray:
+    """frame_rgb: HxWx3 uint8, returns same shape with overlay drawn."""
+    ov = cfg.get("overlay", {})
+    if not ov.get("enabled", True):
+        return frame_rgb
 
-def draw_overlays(img: Image.Image, overlay_cfg: Dict, stats_text: Optional[str] = None) -> Image.Image:
-    """Draw text + reversing guide lines. Returns RGB image."""
-    if not overlay_cfg or not overlay_cfg.get("enabled", True):
-        return img.convert("RGB") if img.mode != "RGB" else img
+    img = Image.fromarray(frame_rgb, mode="RGB").convert("RGBA")
+    lay = Image.new("RGBA", img.size, (0,0,0,0))
+    draw = ImageDraw.Draw(lay)
 
-    base = img.convert("RGBA")
-    w, h = base.size
-    layer = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    # line
+    line = ov.get("line", {})
+    if line.get("enabled", False):
+        w, h = img.size
+        sx = int((line.get("start", [0.1,0.7])[0]) * w)
+        sy = int((line.get("start", [0.1,0.7])[1]) * h)
+        ex = int((line.get("end", [0.9,0.7])[0]) * w)
+        ey = int((line.get("end", [0.9,0.7])[1]) * h)
+        color = _hex_to_rgb(line.get("color", "#00FF00"))
+        width = int(line.get("width_px", 4))
+        draw.line([(sx,sy),(ex,ey)], fill=color+(255,), width=width)
 
-    # Text overlay
-    text_cfg = overlay_cfg.get("text", {})
-    if text_cfg.get("enabled", True) and text_cfg.get("content"):
-        _draw_text(
-            layer,
-            text_cfg.get("content", ""),
-            text_cfg.get("position", "top-left"),
-            int(text_cfg.get("font_size", 20)),
-            int(text_cfg.get("margin", 10)),
-        )
+    # text
+    txt = ov.get("text", {})
+    if txt.get("enabled", False):
+        content = txt.get("content", "RPi Cam")
+        font_size = int(txt.get("font_size", 20))
+        try:
+            font = ImageFont.truetype("DejaVuSans.ttf", font_size)
+        except Exception:
+            font = ImageFont.load_default()
+        margin = int(txt.get("margin", 8))
+        pos_name = txt.get("position", "top-left")
+        x, y = _pos(img.size[0], img.size[1], pos_name, margin)
+        # adjust to keep inside if centered/right
+        if "right" in pos_name:
+            bbox = draw.textbbox((0,0), content, font=font)
+            x -= (bbox[2]-bbox[0])
+        if "center" in pos_name:
+            bbox = draw.textbbox((0,0), content, font=font)
+            x -= (bbox[2]-bbox[0])//2
+        draw.text((x, y), content, fill=(255,255,255,255), font=font, stroke_width=2, stroke_fill=(0,0,0,160))
 
-    # Runtime stats (optional, bottom-left)
-    if stats_text:
-        _draw_text(
-            layer,
-            stats_text,
-            "bottom-left",
-            int(text_cfg.get("font_size", 20)),
-            int(text_cfg.get("margin", 10)),
-        )
-
-    # Reversing lines (normalized coords 0..1)
-    lines = overlay_cfg.get("lines", {})
-    for key in ("line1", "line2"):
-        ln = lines.get(key, {})
-        if not ln.get("enabled", True):
-            continue
-        sx = float(ln.get("start", [0.1, 0.8])[0]) * w
-        sy = float(ln.get("start", [0.1, 0.8])[1]) * h
-        ex = float(ln.get("end", [0.9, 0.8])[0]) * w
-        ey = float(ln.get("end", [0.9, 0.8])[1]) * h
-        _draw_line(
-            layer,
-            (int(sx), int(sy)),
-            (int(ex), int(ey)),
-            int(ln.get("width_px", 4)),
-            str(ln.get("color", "#00FF00")),
-            float(ln.get("alpha", 0.7)),
-        )
-
-    return Image.alpha_composite(base, layer).convert("RGB")
+    out = Image.alpha_composite(img, lay).convert("RGB")
+    return np.array(out, dtype=np.uint8)
+PY
