@@ -1,4 +1,3 @@
-cat > ~/RPi-Reversing-Cam/rpi_reversing_cam/camera.py <<'PY'
 from __future__ import annotations
 from typing import Dict, Any
 import io, time
@@ -49,4 +48,3 @@ class Camera:
         buf = io.BytesIO()
         im.save(buf, format="JPEG", quality=85)
         return buf.getvalue()
-PY
